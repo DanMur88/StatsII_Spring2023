@@ -99,11 +99,138 @@ $$p(D \leq x) \frac{\sqrt {2\pi}}{x} \sum _{k=1}^{\infty }e^{-(2k-1)^{2}\pi ^{2}
 	# generate test statistic
 	D <- max(abs(empiricalCDF - pnorm(data))) \end{lstlisting}
 
-\vspace{3in}
+\vspace{.5cm}
+\noindent
+\textbf{Answer:}\\
+
+An \texttt{R} function was written that implements the Kolmogorov-Smirnov test where the reference distribution is normal, using the below code:
+
+\vspace{.5cm}
+
+\lstinputlisting[language=R, firstline=44, lastline=59]{PS1.R}  
+
+\vspace{.5cm} 
+
+\noindent1,000 Cauchy random variables were generated and the test was performed on this data, using the below code:
+
+\vspace{.5cm}
+
+\lstinputlisting[language=R, firstline=40, lastline=42]{PS1.R}  
+\lstinputlisting[language=R, firstline=61, lastline=62]{PS1.R}  
+
+\vspace{.5cm} 
+
+\noindent This produced the below output:
+
+\vspace{.5cm} 
+
+D = 0.1320026
+
+P-value = 0.002722055 
+
+\vspace{.5cm}
+
+\noindent This result was then checked against the built-in K-S test function in \texttt{R}, using the below code:
+
+\vspace{.5cm}
+
+\lstinputlisting[language=R, firstline=64, lastline=65]{PS1.R}  
+
+\vspace{.5cm}
+
+\noindent This produced the below output:
+
+\vspace{.5cm}
+
+Asymptotic one-sample Kolmogorov-Smirnov test
+\vspace{.5cm}
+
+data:  data\_emp
+
+D = 0.132, p-value = 1.443e-15
+
+alternative hypothesis: two-sided
+
+\vspace{.5cm}
+
+\noindent The two sets of results are functionally the same, with some small variation in the p-values probably due to rounding differences. The p-value indicates that we can reject the null hypothesis that the two samples were drawn from the same distribution.
+
+\vspace{.5cm}
+
+\pagebreak
 
 \section*{Question 2}
 \noindent Estimate an OLS regression in \texttt{R} that uses the Newton-Raphson algorithm (specifically \texttt{BFGS}, which is a quasi-Newton method), and show that you get the equivalent results to using \texttt{lm}. Use the code below to create your data.
 \vspace{.5cm}
-\lstinputlisting[language=R, firstline=51,lastline=53]{PS1.R} 
+\lstinputlisting[language=R, firstline=71,lastline=74]{PS1.R} 
+\vspace{.5cm}
+
+\noindent
+\textbf{Answer:}
+\vspace{.5cm}
+
+\noindent After data was generated using the code above, the log of likelihood function was created as follows:
+
+\vspace{.5cm}
+\lstinputlisting[language=R, firstline=79,lastline=89]{PS1.R} 
+\vspace{.5cm}
+
+\noindent The function was then ran using our data:
+
+ \vspace{.5cm}
+ \lstinputlisting[language=R, firstline=91,lastline=95]{PS1.R} 
+ \vspace{.5cm}
+ 
+ \noindent This gave the below output:
+ 
+ \vspace{.5cm}
+ [1]  0.1398324  2.7265559 -1.4390716
+\vspace{.5cm}
+
+
+
+\noindent We then ran the \texttt{lm()} function, producting the below output
+
+ \vspace{.5cm}
+\lstinputlisting[language=R, firstline=91,lastline=95]{PS1.R} 
+\vspace{.5cm}
+
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Sat, Feb 11, 2023 - 21:18:36
+\begin{table}[!htbp] \centering 
+	\caption{} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lc} 
+		\\[-1.8ex]\hline 
+		\hline \\[-1.8ex] 
+		& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+		\cline{2-2} 
+		\\[-1.8ex] & y \\ 
+		\hline \\[-1.8ex] 
+		x & 2.727$^{***}$ \\ 
+		& (0.042) \\ 
+		& \\ 
+		Constant & 0.139 \\ 
+		& (0.253) \\ 
+		& \\ 
+		\hline \\[-1.8ex] 
+		Observations & 200 \\ 
+		R$^{2}$ & 0.956 \\ 
+		Adjusted R$^{2}$ & 0.956 \\ 
+		Residual Std. Error & 1.447 (df = 198) \\ 
+		F Statistic & 4,298.687$^{***}$ (df = 1; 198) \\ 
+		\hline 
+		\hline \\[-1.8ex] 
+		\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+	\end{tabular} 
+\end{table} 
+
+\vspace{.5cm}
+
+\noindent Comparing the results of our log of likelihood function to the output of the \texttt{lm()} function, we can see that the coefficient estimates are the same.
+
+ 
+
 
 \end{document}

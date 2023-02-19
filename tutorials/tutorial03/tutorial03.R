@@ -48,12 +48,52 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # nsibs: Number of siblings
 # intact: Whether the respondent lived with both biological parents at age 14 (Yes or No)
 
-graduation <- read.table("http://statmath.wu.ac.at/courses/StatsWithR/Powers.txt")
+graduation <- read.table("http://statmath.wu.ac.at/courses/StatsWithR/Powers.txt",
+                         stringsAsFactors = TRUE)
 
 # (a) Perform a logistic regression of hsgrad on the other variables in the data set.
 # Compute a likelihood-ratio test of the omnibus null hypothesis that none of the explanatory variables influences high-school graduation. 
 # Then construct 95-percent confidence intervals for the coefficients of the seven explanatory variables. 
 # What conclusions can you draw from these results? Finally, offer two brief, but concrete, interpretations of each of the estimated coefficients of income and intact.
+
+# Inpect dataset
+head(graduation)
+
+# Run OLS model with hsgrad regressed on all other variables
+ols_base <- lm(hsgrad ~ nonwhite + mhs + fhs + income + asvab + 
+                 nsibs + intact, data = graduation)
+
+# Check regression coefficients
+print(ols_base$coefficients)
+
+# Run logit model with hsgrad regressed on all other variables
+logit_base <- glm(hsgrad ~ nonwhite + mhs + fhs + income + asvab + 
+                    nsibs + intact, data = graduation, 
+                  family = binomial(link="logit")) 
+# Can also use "." in place of all input variables as omnibus selector
+
+summary(logit_base)
+
+# Carry out likelihood ratio test
+
+# Create null model
+nullMod <- glm(hsgrad ~ 1, # 1 = fit an intercept only (i.e. a sort of mean)
+               data = graduation,
+               family = "binomial")
+
+# Use anova function to do likelihood ratio test
+anova(nullMod, logit_base, test="LRT")
+
+# Extract confidence intervals of coefficients
+exp(confint(logit_base)) # need to transform to odds ratio by exponentiation
+
+# Make data.frame of confidence intervals and coefficients
+confMod <- data.frame(cbind(lower = exp(confint(logit_base)[,1]),
+                            coeffs = exp(coef(logit_base)),
+                            upper = exp(confint(logit_base)[,2])))
+
+# Use dataframe to make a plot
+
 
 # (b) The logistic regression in the previous problem assumes that the partial relationship between the log-odds of high-school graduation and number of siblings is linear. 
 # Test for nonlinearity by fitting a model that treats nsibs as a factor, performing an appropriate likelihood-ratio test. 
@@ -61,4 +101,14 @@ graduation <- read.table("http://statmath.wu.ac.at/courses/StatsWithR/Powers.txt
 # Deal with the issue in a reasonable manner. 
 # Does the result of the test change?
 
+# Convert "nsibs" to factor
+graduation$nsibs <- as.factor(graduation$nsibs)
 
+# Carry out likelihood ratio test
+logit_2 <- glm(hsgrad ~ ., data = graduation, 
+                  family = binomial(link="logit")) 
+
+summary(logit_2)
+summary(logit_base)
+
+anova(nullMod, logit_2, test="LRT")
