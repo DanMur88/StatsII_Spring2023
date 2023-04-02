@@ -561,68 +561,6 @@ table(testing$country)
 ## how many were translated in each country
 table(testing$country, testing$translated)
 
-
-###########################
-###########################
-## Replicates Table A5 ####
-###########################
-###########################
-
-m1 <- lm(prop_attn ~ year_f + company  + quota, 
-       data=data_final)
-vcov_company <- cluster.vcov(m1, data_final$company)
-m1_se <- as.matrix(coeftest(m1, vcov_company)) 
-
-m2<-lm(prop_lead ~ year_f + company +  quota, 
-       data=data_final)
-vcov_company <- cluster.vcov(m2, data_final$company)
-m2_se <- as.matrix(coeftest(m2, vcov_company)) 
-
-m3<-lm(prop_pay ~ year_f + company + quota, 
-       data=data_final)
-vcov_company <- cluster.vcov(m3, data_final$company)
-m3_se <- as.matrix(coeftest(m3, vcov_company)) 
-
-m4<-lm(prop_family ~ year_f + company  + quota, 
-                 data=data_final)
-vcov_company <- cluster.vcov(m4, data_final$company)
-m4_se <- as.matrix(coeftest(m4, vcov_company)) 
-
-m5<-lm(prop_harass ~ year_f + company +  quota, 
-       data=data_final)
-vcov_company <- cluster.vcov(m5, data_final$company)
-m5_se <- as.matrix(coeftest(m5, vcov_company))
-
-
-stargazer(m1, m2, m3, m4, m5,
-          font.size = "small",
-          title="Table A5: Regression Results, No Controls",
-          align=TRUE, dep.var.labels=c(
-            "Overall",
-            "Leadership", 
-            "Pay", 
-            "Family Care", 
-            "Discrim/Harass"),
-          se = list(m1_se[,2], 
-                    m2_se[,2],
-                    m3_se[,2],
-                    m4_se[,2],
-                    m5_se[,2]),
-    p = list(m1_se[,4], 
-                    m2_se[,4],
-                    m3_se[,4],
-                    m4_se[,4],
-                    m5_se[,4]),
-          omit.stat=c("LL","ser","f"), 
-          no.space=TRUE,
-          omit = c("year_f", "company", "Constant"),
-add.lines = list(c("Company FEs", "$Yes$", "$Yes$", "$Yes$", "$Yes$", "$Yes$"),
-                           c("Year FEs", "$Yes$", "$Yes$", "$Yes$", "$Yes$", "$Yes$")),
-digits = 3, digits.extra=0,
-star.cutoffs = c(0.05, 0.01, 0.001), 
-notes = "Robust standard errors clustered around company in parentheses.",
-          column.sep.width = "-15pt")
-
 ###########################
 ###########################
 ## Replicates Table A6 ####
