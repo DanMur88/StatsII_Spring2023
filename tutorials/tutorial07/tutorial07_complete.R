@@ -2,6 +2,10 @@
 # Tutorial 7: Survival Analysis #
 ##################################
 
+#Install and load packages
+install.packages("eha")
+library("eha")
+
 data(child)
 
 #### Completed
